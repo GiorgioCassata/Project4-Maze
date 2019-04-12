@@ -1,5 +1,7 @@
 # Prerequisites
 *.d
+# IDK, but I think its a prereq.
+*.depend
 
 # Compiled Object files
 *.slo
