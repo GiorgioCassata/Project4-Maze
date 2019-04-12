@@ -66,17 +66,20 @@ int main() {
 
 
 
-    ifstream file;
+    ifstream fin;
     ofstream fout;
 
     // open input file in which the first line has num of towns and num of transit lines
-    file.open("input.txt");
-    file >> numTowns;
-    file >> numTransitLines;
+    fin.open("input.txt");
+    fin >> numTowns;
+    fin >> numTransitLines;
 
+    while (!fin.eof()) {
+        fin >>
+    }
     // read input and create graph
 
-    file.close();
+    fin.close();
 
     City *startsville = new City;
     if (startsville->getC() == NOCOMPANY) {

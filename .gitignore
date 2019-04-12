@@ -2,6 +2,8 @@
 *.d
 # IDK, but I think its a prereq.
 *.depend
+# IDK either but I dont want it
+*.DS_Store
 
 # Compiled Object files
 *.slo
