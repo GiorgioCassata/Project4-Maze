@@ -29,7 +29,6 @@ string comp_to_string(Company comp){
         }
         return "ERROR";
 }
-//enum LineType {HORSE, CABLE, TROLLEY, BUS, NOLINETYPE};
 string trans_to_string(LineType trans){
         switch (trans) {
         case HORSE:
@@ -51,14 +50,17 @@ struct City {
     Company company;
     LineType transit;
 
-    City(char cityName, Company company, LineType transit) {
-        this->targetName = cityName;
+    City(char targetName, Company company, LineType transit) {
+        this->targetName = targetName;
         this->company = company;
         this->transit = transit;
     }
+
     void print() {
         cout << this->targetName << " with " << comp_to_string(this->company) << "'s " << trans_to_string(this->transit) << endl;
     }
+
+    // necessary for set data structure
     bool operator<(const City& a) const{
         return (this->targetName < a.targetName);
     }
@@ -81,7 +83,7 @@ int main() {
     fin >> numTowns;
     fin >> numTransitLines;
 
-    // read input and create graph
+    // read input and fill map with data
     while (!fin.eof()) {
         fin >> currentCity;
         fin >> targetCity;
@@ -140,16 +142,24 @@ int main() {
     }
 
     fin.close();
+
+    // prints out each city along with each of their connections
     map<char, set<City>> temp;
-    cout << cities.size() << endl;
+    int lineCounter = 0; // counts each transit line (should count each one twice)
     for (map<char, set<City>>::iterator i = cities.begin(); i != cities.end(); ++i) {
         cout << i->first << ": ";
         for (auto j:i->second) {
             cout << "\t";
             j.print();
+            lineCounter++;
         }
         cout << endl;
     }
+    cout << "There are " << cities.size() << " cities with " << lineCounter/2 << " transit lines." << endl;
+
+    // BFS for pretty display
+    vector<city>
+
 
 
     // generate and save output to external file & print to console
