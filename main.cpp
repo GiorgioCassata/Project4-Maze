@@ -73,7 +73,6 @@ struct City {
 void pathfinder(map<char, set<City>> &cities, set<City> pathsTaken, char previousCity, City lastPath) {
     map<char, set<City>>::iterator current = cities.find(lastPath.targetName);
     for (auto j:current->second) {
-        cout << current->first << endl;
         set<City>::iterator isTaken = pathsTaken.find(j);
         // if the path has been taken or leads to previous city, skip it
         // else if matches line or comp take it
@@ -83,17 +82,16 @@ void pathfinder(map<char, set<City>> &cities, set<City> pathsTaken, char previou
         if (lastPath.company == j.company || lastPath.transit == j.transit) {
             pathsTaken.emplace(j);
             pathfinder(cities, pathsTaken, current->first, j);
-        } else {
-            //cout << comp_to_string(lastPath.company) << ' ' << comp_to_string(j.company) << endl;
-            //cout << trans_to_string(lastPath.transit) << ' ' << trans_to_string(j.transit) << endl;
         }
-        if (current->first == cities.rbegin()->first) {
+        if (j.targetName == cities.rbegin()->first) {
             // print paths taken this will be answer
             for (auto k:pathsTaken) {
                 k.print();
                 //cout << endl;
             }
+            return;
         }
+
     }
     return;
 }
