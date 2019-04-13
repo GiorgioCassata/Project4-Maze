@@ -60,11 +60,43 @@ struct City {
         cout << this->targetName << " with " << comp_to_string(this->company) << "'s " << trans_to_string(this->transit) << endl;
     }
 
-    // necessary for set data structure
+    // necessary for set data structure & comparisons
     bool operator<(const City& a) const{
         return (this->targetName < a.targetName);
     }
+    bool operator==(const City& a) const{
+        return (this->targetName == a.targetName);
+    }
 };
+
+
+void pathfinder(map<char, set<City>> &cities, set<City> pathsTaken, char previousCity, City lastPath) {
+    map<char, set<City>>::iterator current = cities.find(lastPath.targetName);
+    for (auto j:current->second) {
+        cout << current->first << endl;
+        set<City>::iterator isTaken = pathsTaken.find(j);
+        // if the path has been taken or leads to previous city, skip it
+        // else if matches line or comp take it
+        if (isTaken != pathsTaken.end() || j.targetName == previousCity) {
+            continue;
+        }
+        if (lastPath.company == j.company || lastPath.transit == j.transit) {
+            pathsTaken.emplace(j);
+            pathfinder(cities, pathsTaken, current->first, j);
+        } else {
+            //cout << comp_to_string(lastPath.company) << ' ' << comp_to_string(j.company) << endl;
+            //cout << trans_to_string(lastPath.transit) << ' ' << trans_to_string(j.transit) << endl;
+        }
+        if (current->first == cities.rbegin()->first) {
+            // print paths taken this will be answer
+            for (auto k:pathsTaken) {
+                k.print();
+                //cout << endl;
+            }
+        }
+    }
+    return;
+}
 
 int main() {
     int numTowns, numTransitLines;
@@ -155,6 +187,11 @@ int main() {
         cout << endl;
     }
     cout << "There are " << cities.size() << " cities with " << lineCounter/2 << " transit lines." << endl;
+    cout << endl;
+
+    set<City> pathsTaken;
+    pathsTaken.emplace(*cities.begin()->second.begin());
+    pathfinder(cities, pathsTaken, cities.begin()->first,  *cities.begin()->second.begin());
 
     /*
     set<City> pathsTaken;
@@ -172,31 +209,6 @@ int main() {
     }
     */
 
-    /*
-    // TODO: needs access to cities map and also move out of main fxn
-    void pathfinder(set<City> pathsTaken, char previousCity, City lastPath) {
-        map<char, set<City>>::iterator current = cities.find(lastPath.targetName);
-        for (auto j:current->second) {
-            set<City>::iterator isTaken = pathsTaken.find(j);
-            // if the path has been taken or leads to previous city, skip it
-            // else if matches line or comp take it
-            if (isTaken != pathsTaken.end() || j.targetName == previousCity) {
-                continue;
-            } else if (lastPath.company == j.company || lastPath.transit == j.transit) {
-                pathsTaken.emplace(j);
-                pathfinder(pathsTaken, current->first, j);
-            }
-            if (current->first == cities.end()) {
-                // save paths taken this will be answer
-                for (auto j:pathsTaken) {
-                    j.print();
-                    cout << endl;
-                }
-            }
-            return;
-        }
-    }
-    */
 
 
     /*
