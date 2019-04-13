@@ -144,7 +144,6 @@ int main() {
     fin.close();
 
     // prints out each city along with each of their connections
-    map<char, set<City>> temp;
     int lineCounter = 0; // counts each transit line (should count each one twice)
     for (map<char, set<City>>::iterator i = cities.begin(); i != cities.end(); ++i) {
         cout << i->first << ": ";
@@ -157,8 +156,76 @@ int main() {
     }
     cout << "There are " << cities.size() << " cities with " << lineCounter/2 << " transit lines." << endl;
 
+    /*
+    set<City> pathsTaken;
+    City lastPath;
+    char previousCity;
+    it = cities.begin();
+    set<City>::iterator it2;
+    for (auto j:it->second) {
+        it2 = pathsTaken.find(j);
+        // if the path has been taken or leads to previous city, skip it
+        if (it2 != pathsTaken.end() || j.targetName == previousCity) {
+            continue;
+        }
+        // else if matches line or comp take it
+    }
+    */
+
+    /*
+    // TODO: needs access to cities map and also move out of main fxn
+    void pathfinder(set<City> pathsTaken, char previousCity, City lastPath) {
+        map<char, set<City>>::iterator current = cities.find(lastPath.targetName);
+        for (auto j:current->second) {
+            set<City>::iterator isTaken = pathsTaken.find(j);
+            // if the path has been taken or leads to previous city, skip it
+            // else if matches line or comp take it
+            if (isTaken != pathsTaken.end() || j.targetName == previousCity) {
+                continue;
+            } else if (lastPath.company == j.company || lastPath.transit == j.transit) {
+                pathsTaken.emplace(j);
+                pathfinder(pathsTaken, current->first, j);
+            }
+            if (current->first == cities.end()) {
+                // save paths taken this will be answer
+                for (auto j:pathsTaken) {
+                    j.print();
+                    cout << endl;
+                }
+            }
+            return;
+        }
+    }
+    */
+
+
+    /*
+     * low-key, high-key failed (was just to display but wasnt needed)
     // BFS for pretty display
-    vector<city>
+    set<char> greyNodes;
+    set<char> blackNodes;
+    set<char>::iterator it2;
+
+    for (map<char, set<City>>::iterator i = cities.begin(); i != cities.end(); ++i) {
+        it2 = blackNodes.find(i->first);
+        if (it2 != blackNodes.end()) {
+            continue;
+        }
+        greyNodes.emplace(i->first);
+        blackNodes.emplace(i->first);
+        cout << i->first << endl;
+        for (auto j:i->second) {
+            it2 = greyNodes.find(j.targetName);
+            if (it2 != greyNodes.end()) {
+                continue;
+            }
+            greyNodes.emplace(j.targetName);
+            cout << j.targetName << ' ';
+        }
+        cout << endl;
+        cout << endl;
+    }
+    */
 
 
 
