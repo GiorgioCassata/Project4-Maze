@@ -93,6 +93,7 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
             pathfinder(cities, pathsTaken, current->first, j);
             pathsTaken.pop_back();
         }
+
         if (j.targetName == cities.rbegin()->first && (j.transit == lastPath.transit || lastPath.company == j.company)) {
             pathsTaken.push_back(j);
                 cout << "PATH:" << endl;
