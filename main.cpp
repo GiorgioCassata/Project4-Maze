@@ -60,6 +60,7 @@ struct City {
         cout << this->targetName << " with " << comp_to_string(this->company) << "'s " << trans_to_string(this->transit) << endl;
     }
 
+
     // necessary for set data structure & comparisons
     bool operator<(const City& a) const{
         return (this->targetName < a.targetName);
@@ -94,17 +95,26 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
             pathsTaken.pop_back();
         }
 
+        //cities.rbegin()->first
         if (j.targetName == cities.rbegin()->first && (j.transit == lastPath.transit || lastPath.company == j.company)) {
             pathsTaken.push_back(j);
-                cout << "PATH:" << endl;
-                int count = 0;
-                // print paths taken this will be answer
-                for (auto k:pathsTaken) {
-                    count++;
-                    k.print();
-                }
-                cout << count << endl;
-                return;
+            // generate and save output to external file & print to console
+            ofstream fout;
+            string fileName = "output";
+            fileName +=  "_";
+            fileName += to_string(pathsTaken.size());
+            fileName += ".txt";
+            fout.open(fileName);
+
+            cout << "PATH:" << endl;
+            // print paths taken this will be answer
+            fout << cities.begin()->first << ' '; // startsville
+            for (auto k:pathsTaken) {
+                k.print();
+                fout << k.targetName << ' ';
+            }
+            fout.close();
+            return;
         }
     }
     return;
@@ -120,7 +130,6 @@ int main() {
     map<char, set<City>>::iterator it;
 
     ifstream fin;
-    ofstream fout;
 
     // open input file in which the first line has num of towns and num of transit lines
     fin.open("input.txt");
@@ -223,40 +232,6 @@ int main() {
 
 
 
-    /*
-     * low-key, high-key failed (was just to display but wasnt needed)
-    // BFS for pretty display
-    set<char> greyNodes;
-    set<char> blackNodes;
-    set<char>::iterator it2;
-
-    for (map<char, set<City>>::iterator i = cities.begin(); i != cities.end(); ++i) {
-        it2 = blackNodes.find(i->first);
-        if (it2 != blackNodes.end()) {
-            continue;
-        }
-        greyNodes.emplace(i->first);
-        blackNodes.emplace(i->first);
-        cout << i->first << endl;
-        for (auto j:i->second) {
-            it2 = greyNodes.find(j.targetName);
-            if (it2 != greyNodes.end()) {
-                continue;
-            }
-            greyNodes.emplace(j.targetName);
-            cout << j.targetName << ' ';
-        }
-        cout << endl;
-        cout << endl;
-    }
-    */
-
-
-
-    // generate and save output to external file & print to console
-    fout.open("output.txt");
-
-    fout.close();
 
     return 0;
 }
