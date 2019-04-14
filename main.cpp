@@ -70,28 +70,41 @@ struct City {
 };
 
 
-void pathfinder(map<char, set<City>> &cities, set<City> pathsTaken, char previousCity, City lastPath) {
+void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char previousCity, City lastPath) {
     map<char, set<City>>::iterator current = cities.find(lastPath.targetName);
     for (auto j:current->second) {
-        set<City>::iterator isTaken = pathsTaken.find(j);
-        // if the path has been taken or leads to previous city, skip it
-        // else if matches line or comp take it
-        if (isTaken != pathsTaken.end() || j.targetName == previousCity) {
+
+        // if the path has been taken or leads to the previous city, skip it
+
+        bool temp = false;
+        for (auto k:pathsTaken) {
+            if (j == k) {
+                temp = true;
+                break;
+            }
+        }
+        if (temp) continue;
+        if (j.targetName == previousCity) {
             continue;
         }
+        // if matches line or company take it
         if (lastPath.company == j.company || lastPath.transit == j.transit) {
-            pathsTaken.emplace(j);
+            pathsTaken.push_back(j);
             pathfinder(cities, pathsTaken, current->first, j);
+            pathsTaken.pop_back();
         }
-        if (j.targetName == cities.rbegin()->first) {
-            // print paths taken this will be answer
-            for (auto k:pathsTaken) {
-                k.print();
-                //cout << endl;
-            }
-            return;
+        if (j.targetName == cities.rbegin()->first && (j.transit == lastPath.transit || lastPath.company == j.company)) {
+            pathsTaken.push_back(j);
+                cout << "PATH:" << endl;
+                int count = 0;
+                // print paths taken this will be answer
+                for (auto k:pathsTaken) {
+                    count++;
+                    k.print();
+                }
+                cout << count << endl;
+                return;
         }
-
     }
     return;
 }
@@ -187,8 +200,8 @@ int main() {
     cout << "There are " << cities.size() << " cities with " << lineCounter/2 << " transit lines." << endl;
     cout << endl;
 
-    set<City> pathsTaken;
-    pathsTaken.emplace(*cities.begin()->second.begin());
+    vector<City> pathsTaken;
+    pathsTaken.push_back(*cities.begin()->second.begin());
     pathfinder(cities, pathsTaken, cities.begin()->first,  *cities.begin()->second.begin());
 
     /*
