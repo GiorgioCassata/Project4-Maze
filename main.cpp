@@ -71,12 +71,12 @@ struct City {
 };
 
 
-void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char previousCity, City lastPath) {
+void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char previousCity, City lastPath, char &target) {
     map<char, set<City>>::iterator current = cities.find(lastPath.targetName);
+    // for each path off of previous city...
     for (auto j:current->second) {
 
         // if the path has been taken or leads to the previous city, skip it
-
         bool temp = false;
         for (auto k:pathsTaken) {
             if (j == k) {
@@ -91,12 +91,12 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
         // if matches line or company take it
         if (lastPath.company == j.company || lastPath.transit == j.transit) {
             pathsTaken.push_back(j);
-            pathfinder(cities, pathsTaken, current->first, j);
+            pathfinder(cities, pathsTaken, current->first, j, target);
             pathsTaken.pop_back();
         }
 
         //cities.rbegin()->first
-        if (j.targetName == cities.rbegin()->first && (j.transit == lastPath.transit || lastPath.company == j.company)) {
+        if (j.targetName == target && (j.transit == lastPath.transit || lastPath.company == j.company)) {
             pathsTaken.push_back(j);
             // generate and save output to external file & print to console
             ofstream fout;
@@ -114,7 +114,9 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
                 fout << k.targetName << ' ';
             }
             fout.close();
-            return;
+            pathfinder(cities, pathsTaken, current->first, j, target);
+            pathsTaken.pop_back();
+            continue;
         }
     }
     return;
@@ -210,9 +212,11 @@ int main() {
     cout << "There are " << cities.size() << " cities with " << lineCounter/2 << " transit lines." << endl;
     cout << endl;
 
+    char target;
     vector<City> pathsTaken;
+    cin >> target;
     pathsTaken.push_back(*cities.begin()->second.begin());
-    pathfinder(cities, pathsTaken, cities.begin()->first,  *cities.begin()->second.begin());
+    pathfinder(cities, pathsTaken, cities.begin()->first,  *cities.begin()->second.begin(), target);
 
     /*
     set<City> pathsTaken;
