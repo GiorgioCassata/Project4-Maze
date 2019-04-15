@@ -91,7 +91,12 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
         // if matches line or company take it
         if (lastPath.company == j.company || lastPath.transit == j.transit) {
             pathsTaken.push_back(j);
-            pathfinder(cities, pathsTaken, current->first, j, target);
+            pathfinder(cities, pathsTaken, current->first, j, target);\
+            cout << "path:" << endl;
+            for (auto k:pathsTaken) {
+                cout << k.targetName << ' ';
+            }
+            cout << endl;
             pathsTaken.pop_back();
         }
 
@@ -115,7 +120,7 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
             }
             fout.close();
             pathfinder(cities, pathsTaken, current->first, j, target);
-            pathsTaken.pop_back();
+            //pathsTaken.pop_back();
             continue;
         }
     }
