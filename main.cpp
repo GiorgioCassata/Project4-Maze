@@ -1,6 +1,7 @@
 /*  @Author: Giorgio Cassata
  *  Title: Project 4 - Maze
- *  Description:
+ *  Description: Takes an input from file and creates a graph
+ *
  *
 */
 #include <fstream>
@@ -60,22 +61,21 @@ struct City {
         cout << this->targetName << " with " << comp_to_string(this->company) << "'s " << trans_to_string(this->transit) << endl;
     }
 
-
-    // necessary for set data structure & comparisons
+    // necessary for comparisons
     bool operator<(const City& a) const{
         return (this->targetName < a.targetName);
     }
     bool operator==(const City& a) const{
-        return (this->targetName == a.targetName);
+        if (this->targetName == a.targetName && this->company == a.company && this->transit == a.transit) return true;
+        return false;
     }
 };
 
-
-void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char previousCity, City lastPath, char &target) {
+// recursive DFS algorithm for generating all paths to 'paths.txt'
+void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char previousCity, City lastPath) {
     map<char, set<City>>::iterator current = cities.find(lastPath.targetName);
     // for each path off of previous city...
     for (auto j:current->second) {
-
         // if the path has been taken or leads to the previous city, skip it
         bool temp = false;
         for (auto k:pathsTaken) {
@@ -88,18 +88,28 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
         if (j.targetName == previousCity) {
             continue;
         }
-        // if matches line or company take it
+        // if matches transit line or company, take it
         if (lastPath.company == j.company || lastPath.transit == j.transit) {
             pathsTaken.push_back(j);
-            pathfinder(cities, pathsTaken, current->first, j, target);\
-            cout << "path:" << endl;
+
+            pathfinder(cities, pathsTaken, current->first, j);
+
+            // by putting this after the function call the paths are saved from
+            // deepest to shallowest for each branch (This benefits finding path speed)
+            ofstream fout;
+            fout.open("paths.txt", std::ofstream::app);
+
+            // print all paths possible, one on each line
+            fout << cities.begin()->first << ' '; // startsville
             for (auto k:pathsTaken) {
-                cout << k.targetName << ' ';
+                fout << k.targetName << ' ';
             }
-            cout << endl;
+            fout << endl;
+            fout.close();
+
             pathsTaken.pop_back();
         }
-
+        /*
         //cities.rbegin()->first
         if (j.targetName == target && (j.transit == lastPath.transit || lastPath.company == j.company)) {
             pathsTaken.push_back(j);
@@ -109,6 +119,7 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
             fileName +=  "_";
             fileName += to_string(pathsTaken.size());
             fileName += ".txt";
+
             fout.open(fileName);
 
             cout << "PATH:" << endl;
@@ -119,13 +130,17 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
                 fout << k.targetName << ' ';
             }
             fout.close();
-            pathfinder(cities, pathsTaken, current->first, j, target);
+
+            //these dont seem to change outcome
+            //pathfinder(cities, pathsTaken, current->first, j, target);
             //pathsTaken.pop_back();
             continue;
         }
+        */
     }
     return;
 }
+
 
 int main() {
     int numTowns, numTransitLines;
@@ -203,6 +218,7 @@ int main() {
 
     fin.close();
 
+
     // prints out each city along with each of their connections
     int lineCounter = 0; // counts each transit line (should count each one twice)
     for (map<char, set<City>>::iterator i = cities.begin(); i != cities.end(); ++i) {
@@ -214,33 +230,18 @@ int main() {
         }
         cout << endl;
     }
-    cout << "There are " << cities.size() << " cities with " << lineCounter/2 << " transit lines." << endl;
-    cout << endl;
+    // print statement to verify that the number of nodes and edges found matches
+    // the number specified in the input file
+    cout << "There are " << cities.size() << "/" << numTowns << " cities with " << lineCounter/2 << "/" << numTransitLines << " transit lines." << endl;
 
-    char target;
+
+    // clear paths.txt and prep for 'pathfinder' function
+    ofstream fout;
+    fout.open("paths.txt");
+    fout.close();
     vector<City> pathsTaken;
-    cin >> target;
     pathsTaken.push_back(*cities.begin()->second.begin());
-    pathfinder(cities, pathsTaken, cities.begin()->first,  *cities.begin()->second.begin(), target);
-
-    /*
-    set<City> pathsTaken;
-    City lastPath;
-    char previousCity;
-    it = cities.begin();
-    set<City>::iterator it2;
-    for (auto j:it->second) {
-        it2 = pathsTaken.find(j);
-        // if the path has been taken or leads to previous city, skip it
-        if (it2 != pathsTaken.end() || j.targetName == previousCity) {
-            continue;
-        }
-        // else if matches line or comp take it
-    }
-    */
-
-
-
+    pathfinder(cities, pathsTaken, cities.begin()->first,  *cities.begin()->second.begin());
 
     return 0;
 }
