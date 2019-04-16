@@ -11,6 +11,7 @@
 #include <map>
 #include <cmath>
 #include <set>
+#include <sstream>
 
 using namespace std;
 
@@ -153,10 +154,12 @@ int main() {
 
     ifstream fin;
 
+
     // open input file in which the first line has num of towns and num of transit lines
     fin.open("input.txt");
     fin >> numTowns;
     fin >> numTransitLines;
+
 
     // read input and fill map with data
     while (!fin.eof()) {
@@ -242,6 +245,26 @@ int main() {
     vector<City> pathsTaken;
     pathsTaken.push_back(*cities.begin()->second.begin());
     pathfinder(cities, pathsTaken, cities.begin()->first,  *cities.begin()->second.begin());
+
+
+    // Read paths file to find specified target
+    char target;
+    cin >> target;
+    fin.open("paths.txt");
+    string inputLine;
+    while(getline(fin, inputLine)) {
+        //cout << inputLine.at(inputLine.size()-1) << endl;
+        if (inputLine.at(inputLine.size()-2) == target) {
+             cout << inputLine << endl;
+        }
+
+        // if target exists in inputLine, find line that contains it as the final character
+    }
+    fin.close();
+
+
+
+
 
     return 0;
 }
