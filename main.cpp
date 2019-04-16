@@ -153,6 +153,7 @@ int main() {
     map<char, set<City>>::iterator it;
 
     ifstream fin;
+    ofstream foutput;
 
 
     // open input file in which the first line has num of towns and num of transit lines
@@ -247,24 +248,28 @@ int main() {
     pathfinder(cities, pathsTaken, cities.begin()->first,  *cities.begin()->second.begin());
 
 
-    // Read paths file to find specified target
-    char target;
-    cin >> target;
+    // Read paths file to find specified target and print them to an output file
+    char target = cities.rbegin()->first;
+    //cin >> target;
     fin.open("paths.txt");
+    foutput.open("output.txt");
     string inputLine;
+    string shortestPath = "NA";
     while(getline(fin, inputLine)) {
-        //cout << inputLine.at(inputLine.size()-1) << endl;
         if (inputLine.at(inputLine.size()-2) == target) {
-             cout << inputLine << endl;
+            if (shortestPath == "NA") {
+                shortestPath = inputLine;
+            } else if (inputLine.size() < shortestPath.size()) {
+                shortestPath = inputLine;
+            }
         }
-
+        // TODO: create a method of searching paths more efficiently (since it follows a pattern)
+        // take input line, if it is shorter than last one...skip
         // if target exists in inputLine, find line that contains it as the final character
     }
+    foutput << shortestPath << endl;
     fin.close();
-
-
-
-
+    foutput.close();
 
     return 0;
 }
