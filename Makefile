@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-c -g -O3 -std=c++14
-SOURCES=main.cpp
+SOURCES=main.cpp City.cpp functions.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBS=
 LDFLAGS=

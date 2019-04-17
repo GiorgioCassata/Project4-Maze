@@ -3,7 +3,7 @@
  *  Description: Takes an input from file and creates a graph
  *
  *
-*/
+ */
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -13,135 +13,11 @@
 #include <set>
 #include <sstream>
 
+#include "TypeEnums.h"
+#include "functions.h"
+#include "City.h"
+
 using namespace std;
-
-enum Company {RED, BLUE, GREEN, NOCOMPANY};
-enum LineType {HORSE, CABLE, TROLLEY, BUS, NOLINETYPE};
-
-string comp_to_string(Company comp){
-        switch (comp) {
-        case RED:
-            return "RED";
-        case BLUE:
-            return "BLUE";
-        case GREEN:
-            return "GREEN";
-        default:
-            return "NONE";
-        }
-        return "ERROR";
-}
-string trans_to_string(LineType trans){
-        switch (trans) {
-        case HORSE:
-            return "HORSE";
-        case CABLE:
-            return "CABLE";
-        case TROLLEY:
-            return "TROLLEY";
-        case BUS:
-            return "BUS";
-        default:
-            return "NONE";
-        }
-        return "ERROR";
-}
-
-struct City {
-    char targetName;
-    Company company;
-    LineType transit;
-
-    City(char targetName, Company company, LineType transit) {
-        this->targetName = targetName;
-        this->company = company;
-        this->transit = transit;
-    }
-
-    void print() {
-        cout << this->targetName << " with " << comp_to_string(this->company) << "'s " << trans_to_string(this->transit) << endl;
-    }
-
-    // necessary for comparisons
-    bool operator<(const City& a) const{
-        return (this->targetName < a.targetName);
-    }
-    bool operator==(const City& a) const{
-        if (this->targetName == a.targetName && this->company == a.company && this->transit == a.transit) return true;
-        return false;
-    }
-};
-
-// recursive DFS algorithm for generating all paths to 'paths.txt'
-void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char previousCity, City lastPath) {
-    map<char, set<City>>::iterator current = cities.find(lastPath.targetName);
-    // for each path off of previous city...
-    for (auto j:current->second) {
-        // if the path has been taken or leads to the previous city, skip it
-        bool temp = false;
-        for (auto k:pathsTaken) {
-            if (j == k) {
-                temp = true;
-                break;
-            }
-        }
-        if (temp) continue;
-        if (j.targetName == previousCity) {
-            continue;
-        }
-        // if matches transit line or company, take it
-        if (lastPath.company == j.company || lastPath.transit == j.transit) {
-            pathsTaken.push_back(j);
-
-            pathfinder(cities, pathsTaken, current->first, j);
-
-            // by putting this after the function call the paths are saved from
-            // deepest to shallowest for each branch (This benefits finding path speed)
-            ofstream fout;
-            fout.open("paths.txt", std::ofstream::app);
-
-            // print all paths possible, one on each line
-            fout << cities.begin()->first << ' '; // startsville
-            for (auto k:pathsTaken) {
-                fout << k.targetName << ' ';
-            }
-            fout << endl;
-            fout.close();
-
-            pathsTaken.pop_back();
-        }
-        /*
-        //cities.rbegin()->first
-        if (j.targetName == target && (j.transit == lastPath.transit || lastPath.company == j.company)) {
-            pathsTaken.push_back(j);
-            // generate and save output to external file & print to console
-            ofstream fout;
-            string fileName = "output";
-            fileName +=  "_";
-            fileName += to_string(pathsTaken.size());
-            fileName += ".txt";
-
-            fout.open(fileName);
-
-            cout << "PATH:" << endl;
-            // print paths taken this will be answer
-            fout << cities.begin()->first << ' '; // startsville
-            for (auto k:pathsTaken) {
-                k.print();
-                fout << k.targetName << ' ';
-            }
-            fout.close();
-
-            //these dont seem to change outcome
-            //pathfinder(cities, pathsTaken, current->first, j, target);
-            //pathsTaken.pop_back();
-            continue;
-        }
-        */
-    }
-    return;
-}
-
 
 int main() {
     int numTowns, numTransitLines;
@@ -169,35 +45,8 @@ int main() {
         fin >> comp;
         fin >> trans;
 
-        switch (comp) {
-            case 'R':
-                company = RED;
-                break;
-            case 'B':
-                company = BLUE;
-                break;
-            case 'G':
-                company = GREEN;
-                break;
-            default:
-                company = NOCOMPANY;
-        }
-        switch (trans) {
-            case 'H':
-                transit = HORSE;
-                break;
-            case 'C':
-                transit = CABLE;
-                break;
-            case 'T':
-                transit = TROLLEY;
-                break;
-            case 'B':
-                transit = BUS;
-                break;
-            default:
-                transit = NOLINETYPE;
-        }
+        company = char_to_comp(comp);
+        transit = char_to_line(trans);
 
         // Add current city if it doesnt exist
         it = cities.find(currentCity);
@@ -229,11 +78,13 @@ int main() {
         cout << i->first << ": ";
         for (auto j:i->second) {
             cout << "\t";
-            j.print();
+            printCity(j);
             lineCounter++;
         }
         cout << endl;
     }
+
+
     // print statement to verify that the number of nodes and edges found matches
     // the number specified in the input file
     cout << "There are " << cities.size() << "/" << numTowns << " cities with " << lineCounter/2 << "/" << numTransitLines << " transit lines." << endl;
