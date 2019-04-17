@@ -263,9 +263,6 @@ int main() {
                 shortestPath = inputLine;
             }
         }
-        // TODO: create a method of searching paths more efficiently (since it follows a pattern)
-        // take input line, if it is shorter than last one...skip
-        // if target exists in inputLine, find line that contains it as the final character
     }
     foutput << shortestPath << endl;
     fin.close();
