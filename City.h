@@ -10,8 +10,6 @@ struct City {
 
     City(char targetName, Company company, LineType transit);
 
-    //void print();
-
     // necessary for comparisons
     bool operator<(const City& a) const;
     bool operator==(const City& a) const;

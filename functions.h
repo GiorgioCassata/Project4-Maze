@@ -28,5 +28,8 @@ void printCity(City a);
 // recursive DFS algorithm for generating all paths to 'paths.txt'
 void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char previousCity, City lastPath);
 
+void solvePaths(map<char, set<City>> &cities);
+
+void choosePath(map<char, set<City>> &cities);
 
 #endif

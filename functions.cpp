@@ -137,3 +137,37 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
     }
     return;
 }
+
+// clear paths.txt and prep for 'pathfinder' function
+void solvePaths(map<char, set<City>> &cities) {
+    ofstream fout;
+    fout.open("paths.txt");
+    fout.close();
+    vector<City> pathsTaken;
+    pathsTaken.push_back(*cities.begin()->second.begin());
+    pathfinder(cities, pathsTaken, cities.begin()->first,  *cities.begin()->second.begin());
+}
+
+void choosePath(map<char, set<City>> &cities) {
+    ifstream fin;
+    ofstream foutput;
+    // Read paths file to find specified target and print them to an output file
+    char target = cities.rbegin()->first;
+    //cin >> target;
+    fin.open("paths.txt");
+    foutput.open("output.txt");
+    string inputLine;
+    string shortestPath = "NA";
+    while(getline(fin, inputLine)) {
+        if (inputLine.at(inputLine.size()-2) == target) {
+            if (shortestPath == "NA") {
+                shortestPath = inputLine;
+            } else if (inputLine.size() < shortestPath.size()) {
+                shortestPath = inputLine;
+            }
+        }
+    }
+    foutput << shortestPath << endl;
+    fin.close();
+    foutput.close();
+}
