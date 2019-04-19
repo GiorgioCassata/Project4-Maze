@@ -26,7 +26,7 @@ int main() {
     LineType transit;
 
     map<char, set<City>> cities;
-
+    map<char, set<City>>::iterator it;
 
     ifstream fin;
 
@@ -68,7 +68,6 @@ int main() {
 
     fin.close();
 
-    map<char, set<City>>::iterator it;
     // prints out each city along with each of their connections
     int lineCounter = 0; // counts each transit line (should count each one twice)
     for (map<char, set<City>>::iterator i = cities.begin(); i != cities.end(); ++i) {
