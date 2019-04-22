@@ -65,10 +65,10 @@ int main() {
         target = City(currentCity, company, transit);
         cities.at(targetCity).emplace(target);
     }
-
     fin.close();
 
     // prints out each city along with each of their connections
+    // also necessary for verifying number of transit lines
     int lineCounter = 0; // counts each transit line (should count each one twice)
     for (map<char, set<City>>::iterator i = cities.begin(); i != cities.end(); ++i) {
         cout << i->first << ": ";
@@ -80,15 +80,24 @@ int main() {
         cout << endl;
     }
 
-
     // print statement to verify that the number of nodes and edges found matches
     // the number specified in the input file
     cout << "There are " << cities.size() << "/" << numTowns << " cities with " << lineCounter/2 << "/" << numTransitLines << " transit lines." << endl;
+    // if the numbers are not correct, will not solve or generate new outputs
+    if (cities.size() != numTowns || lineCounter/2 != numTransitLines) {
+        return -1;
+    }
 
     // abstraction of function that runs a DFS on
+    // creates paths.txt which contains all paths for
+    // given input
     solvePaths(cities);
 
+
+    // chooses shortest path from first city to last
+    // city and saves it to output.txt
     choosePath(cities);
+
 
     return 0;
 }

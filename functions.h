@@ -30,6 +30,8 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
 
 void solvePaths(map<char, set<City>> &cities);
 
+//void solvePaths_BFS(map<char, set<City>> &cities);
+
 void choosePath(map<char, set<City>> &cities);
 
 #endif

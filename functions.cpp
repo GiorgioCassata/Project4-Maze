@@ -69,6 +69,7 @@ void printCity(City a) {
 }
 
 // recursive DFS algorithm for generating all paths to 'paths.txt'
+// is helped and called by solvePaths
 void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char previousCity, City lastPath) {
     map<char, set<City>>::iterator current = cities.find(lastPath.targetName);
     // for each path off of previous city...
@@ -106,34 +107,6 @@ void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char prev
 
             pathsTaken.pop_back();
         }
-        /*
-        //cities.rbegin()->first
-        if (j.targetName == target && (j.transit == lastPath.transit || lastPath.company == j.company)) {
-            pathsTaken.push_back(j);
-            // generate and save output to external file & print to console
-            ofstream fout;
-            string fileName = "output";
-            fileName +=  "_";
-            fileName += to_string(pathsTaken.size());
-            fileName += ".txt";
-
-            fout.open(fileName);
-
-            cout << "PATH:" << endl;
-            // print paths taken this will be answer
-            fout << cities.begin()->first << ' '; // startsville
-            for (auto k:pathsTaken) {
-                k.print();
-                fout << k.targetName << ' ';
-            }
-            fout.close();
-
-            //these dont seem to change outcome
-            //pathfinder(cities, pathsTaken, current->first, j, target);
-            //pathsTaken.pop_back();
-            continue;
-        }
-        */
     }
     return;
 }
@@ -147,6 +120,49 @@ void solvePaths(map<char, set<City>> &cities) {
     pathsTaken.push_back(*cities.begin()->second.begin());
     pathfinder(cities, pathsTaken, cities.begin()->first,  *cities.begin()->second.begin());
 }
+
+/*
+void solvePaths_BFS(map<char, set<City>> &cities) {
+    ofstream fout;
+    fout.open("paths.txt");
+    fout.close();
+    set<char> greyPaths;
+    set<char> blackPaths;
+    set<char> whitePaths;
+    map<char, set<City>>::iterator it;
+    for (it = cities.begin(); it != cities.end(); ++it) {
+        whitePaths.emplace(it->first);
+    }
+
+    //while(greyPaths.size() != 0) {
+    for (int i = 0; i < 10; ++i) {
+    map<char, set<City>>::iterator current = cities.find(*whitePaths.begin());
+        whitePaths.erase(current->first);
+        greyPaths.emplace(current->first);
+        // for each path off of previous city...
+        for (auto j:current->second) {
+            if (lastPath.company == j.company || lastPath.transit == j.transit) {
+                if (greyPaths.find(j.targetName) == greyPaths.end() && blackPaths.find(j.targetName) == blackPaths.end()) {
+                    whitePaths.erase(j.targetName);
+                    greyPaths.emplace(j.targetName);
+                }
+            }
+        }
+        greyPaths.erase(current->first);
+        blackPaths.emplace(current->first);
+    }
+    ofstream fout;
+    fout.open("paths.txt", std::ofstream::app);
+
+    // print all paths possible, one on each line
+    for (auto k:blackPaths) {
+        fout << k << ' ';
+    }
+    fout << endl;
+    fout.close();
+    return;
+}
+*/
 
 void choosePath(map<char, set<City>> &cities) {
     ifstream fin;
