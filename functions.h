@@ -1,3 +1,7 @@
+/*  @Author: Giorgio Cassata
+ *  Title: Project 4 - Maze
+ */
+ 
 #ifndef _FUNCTIONS_H
 #define _FUNCTIONS_H
 
@@ -25,13 +29,17 @@ LineType char_to_line(char a);
 
 void printCity(City a);
 
-// recursive DFS algorithm for generating all paths to 'paths.txt'
-void pathfinder(map<char, set<City>> &cities, vector<City> pathsTaken, char previousCity, City lastPath);
+// Recursive DFS algorithm for generating all paths to 'paths.txt'
+// Is helped and called by solvePaths
+void recursiveDFS(map<char, set<City>> &cities, vector<City> pathsTaken, char previousCity, City lastPath);
 
+// Clear paths.txt and prep for 'recursiveDFS' (recursive DFS) function
 void solvePaths(map<char, set<City>> &cities);
 
 //void solvePaths_BFS(map<char, set<City>> &cities);
 
-void choosePath(map<char, set<City>> &cities);
+// Read paths file to find paths with target as the endpoint
+// Identifying the shortest one and printing to output file
+void choosePath(map<char, set<City>> &cities, char target);
 
 #endif

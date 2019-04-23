@@ -1,3 +1,7 @@
+/*  @Author: Giorgio Cassata
+ *  Title: Project 4 - Maze
+ */
+
 #ifndef _TYPEENUMS_H
 #define _TYPEENUMS_H
 

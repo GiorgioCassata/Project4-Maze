@@ -1,3 +1,7 @@
+/*  @Author: Giorgio Cassata
+ *  Title: Project 4 - Maze
+ */
+ 
 #ifndef _CITY_H
 #define _CITY_H
 

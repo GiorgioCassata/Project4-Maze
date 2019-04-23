@@ -1,3 +1,7 @@
+/*  @Author: Giorgio Cassata
+ *  Title: Project 4 - Maze
+ */
+ 
 #include "TypeEnums.h"
 #include "City.h"
 
