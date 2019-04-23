@@ -23,7 +23,7 @@ depend: .depend
 include .depend
 
 clean:
-	rm -f .depend $(OBJECTS) *output*
+	rm -f .depend $(OBJECTS) *output* *paths*
 
 erase:
 	rm -f .depend $(OBJECTS) $(PROGRAM)
